@@ -47,11 +47,14 @@ else
 	echo "string"
 	distro=$(distro | cut -d " " -f 1)
 	case $distro in
-		[dD]ebian)
+		Debian)
 			cnf="/etc/network/interfaces"
 		;;
-		[gG]entoo)
+		Gentoo)
 			cnf="/etc/conf.d/net"
+		;;
+		CentOS|RedHat|SuSE|Mandriva|Mandrake)
+			cnf="/etc/sysconfig/network-scripts/ifcfg-$IFACE"
 		;;
 		*)
 			cnf=""
