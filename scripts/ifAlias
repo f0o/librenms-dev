@@ -60,7 +60,7 @@ else
 		;;
 	esac
 	if [ -n "$cnf" ]; then
-		echo $(grep "^# $IFACE:" $cnf | sed "s/^# $IFACE: //")
+		echo $(grep -i "^# $IFACE:" $cnf | sed "s/^# $IFACE: //i")
 	else
 		echo
 	fi
