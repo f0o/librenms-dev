@@ -1,5 +1,5 @@
 #!/bin/bash
-# (c) 2013, f0o@devilcode.org
+# (c) 2013, 2014, f0o@devilcode.org
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -45,6 +45,17 @@ if [ "X${IFACE}" = "X" ]; then
 	echo noSuchName
 else
 	echo "string"
-	echo $(grep "^# $IFACE:" /etc/network/interfaces | sed "s/^# $IFACE: //")
+	distro=$(distro | cut -d " " -f 1)
+	case $distro in
+		[dD]ebian)
+			grep "^# $IFACE:" /etc/network/interfaces | sed "s/^# $IFACE: //"
+		;;
+		[gG]entoo)
+			grep "^# $IFACE:" /etc/conf.d/net | sed "s/^# $IFACE: //"
+		;;
+		*)
+			echo "-"
+		;;
+	esac
 fi
 exit 0
