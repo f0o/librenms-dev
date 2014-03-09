@@ -45,8 +45,7 @@ if [ "X${IFACE}" = "X" ]; then
 	echo noSuchName
 else
 	echo "string"
-	distro=$(distro | cut -d " " -f 1)
-	case $distro in
+	case $(distro | cut -d " " -f 1) in
 		Debian)
 			cnf="/etc/network/interfaces"
 		;;
