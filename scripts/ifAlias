@@ -48,14 +48,19 @@ else
 	distro=$(distro | cut -d " " -f 1)
 	case $distro in
 		[dD]ebian)
-			grep "^# $IFACE:" /etc/network/interfaces | sed "s/^# $IFACE: //"
+			cnf="/etc/network/interfaces"
 		;;
 		[gG]entoo)
-			grep "^# $IFACE:" /etc/conf.d/net | sed "s/^# $IFACE: //"
+			cnf="/etc/conf.d/net"
 		;;
 		*)
-			echo "-"
+			cnf=""
 		;;
 	esac
+	if [ -n "$cnf" ]; then
+		echo $(grep "^# $IFACE:" $cnf | sed "s/^# $IFACE: //")
+	else
+		echo
+	fi
 fi
 exit 0
