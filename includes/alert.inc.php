@@ -53,7 +53,7 @@ class Alert implements arrayaccess {
 			return false;
 		}
 		foreach( file($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") as $line ) {
-			if( strstr("// Format: ") || strstr(" * Format: ") || strstr("/* Format: ") ) {
+			if( strstr("// Format: ",$line) || strstr(" * Format: ",$line) || strstr("/* Format: ",$line) ) {
 				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line);
 			}
 		}
@@ -141,7 +141,7 @@ class Alert implements arrayaccess {
 	
 	public function offsetSet( $offset, $value ) {
 		if( !$this->offsetExists( $offset ) ) {
-			$this->raw[$offset] = strtolower($value);
+			$this->raw[$offset] = $value;
 			return true;
 		} else {
 			return false;
