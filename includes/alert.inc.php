@@ -64,7 +64,7 @@ class Alert implements arrayaccess {
 			$this->data["port"] = dbFetchRow("SELECT port_id,device_id,ifName,ifPhysAddress,ifSpeed FROM ports WHERE $w = ?", array($this->raw["obj"]["p"]));
 			$this->data["device"] = $this->getDevice($this->data["port"]["device_id"]);
 			unset($this->data["port"]["device_id"]);
-			return $this->["port"];
+			return $this->data["port"];
 		}
 	}
 	
