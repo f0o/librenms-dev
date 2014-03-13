@@ -55,11 +55,12 @@ class Alert implements arrayaccess {
 		}
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			if( strstr($line,"// Format: ") || strstr($line," * Format: ") || strstr($line,"/* Format: ") ) {
-				var_dump($line);
-				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line);
+				$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line));
 			}
 		}
-		return $format;
+		$alert = $this->data;
+		eval('$msg = "'.$format.'";');
+		return $msg;
 	}
 	
 	private function callType( $mixed ) {
