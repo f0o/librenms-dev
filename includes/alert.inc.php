@@ -51,7 +51,7 @@ class Alert implements arrayaccess {
 			return false;
 		} else {
 			$w = is_numeric($mixed) ? "device_id" : "hostname";
-			$this->data["device"] = dbFetchRow("SELECT device_id,hostname,sysName,sysContact FROM devices WHERE $w = ?", array($this->raw["obj"]["d"]));
+			$this->data["device"] = dbFetchRow("SELECT device_id,hostname,sysName,sysContact FROM devices WHERE $w = ?", array($mixed));
 			return $this->data["device"];
 		}
 	}
@@ -61,7 +61,7 @@ class Alert implements arrayaccess {
 			return false;
 		} else {
 			$w = is_numeric($mixed) ? "port_id" : "ifName";
-			$this->data["port"] = dbFetchRow("SELECT port_id,device_id,ifName,ifPhysAddress,ifSpeed FROM ports WHERE $w = ?", array($this->raw["obj"]["p"]));
+			$this->data["port"] = dbFetchRow("SELECT port_id,device_id,ifName,ifPhysAddress,ifSpeed FROM ports WHERE $w = ?", array($mixed));
 			$this->data["device"] = $this->getDevice($this->data["port"]["device_id"]);
 			unset($this->data["port"]["device_id"]);
 			return $this->data["port"];
