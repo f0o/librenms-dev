@@ -30,16 +30,16 @@ class Alert implements arrayaccess {
 		} else {
 			if( is_array($this->raw["obj"]) ) {
 				if( $this->raw["obj"]["d"] !== NULL ) {
-					$this->data["device"] = $this->getDevice(is_array($this->raw["obj"]["d"]));
+					$this->data["device"] = $this->getDevice($this->raw["obj"]["d"]);
 				}
 				if( $this->raw["obj"]["p"] !== NULL ) {
-					$this->data["port"] = $this->getPort(is_array($this->raw["obj"]["p"]));
+					$this->data["port"] = $this->getPort($this->raw["obj"]["p"]);
 				}
 				if( $this->raw["obj"]["s"] !== NULL ) {
 					return false;
 				}
 			} else {
-				$this->data["device"] = $this->getDevice(is_array($this->raw["obj"]));
+				$this->data["device"] = $this->getDevice($this->raw["obj"]);
 			}
 			
 			return true;
