@@ -49,11 +49,13 @@ class Alert implements arrayaccess {
 	}
 	
 	private function getFormat( $mixed ) {
-		if( !file_exists($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") ) {
+		global $config;
+		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
-		foreach( file($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") as $line ) {
+		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			if( strstr("// Format: ",$line) || strstr(" * Format: ",$line) || strstr("/* Format: ",$line) ) {
+				var_dump($line);
 				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line);
 			}
 		}
@@ -61,10 +63,11 @@ class Alert implements arrayaccess {
 	}
 	
 	private function callType( $mixed ) {
-		if( !file_exists($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") ) {
+		global $config;
+		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
-		eval("$tmp = function( $state ){ ".file_get_contents($config['install_dir']."/alerts/".$this->raw["type"]."inc.php")." }");
+		eval('$tmp = function( $state ){ global config; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
 		$tmp = $tmp($this->raw["state"]);
 		return $tmp;
 	}
