@@ -54,7 +54,7 @@ class Alert implements arrayaccess {
 		}
 		foreach( file($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") as $line ) {
 			if( strstr("// Format: ") || strstr(" * Format: ") || strstr("/* Format: ") ) {
-				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line)
+				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line);
 			}
 		}
 		return $format;
