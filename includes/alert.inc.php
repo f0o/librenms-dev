@@ -21,7 +21,7 @@ class Alert implements arrayaccess {
 						);
 	private $data = array( );
 	public function __construct( ) {
-		
+		$this->data["timestamp"] = time();
 	}
 	
 	public function resolve( ) {
@@ -41,9 +41,32 @@ class Alert implements arrayaccess {
 			} else {
 				$this->getDevice($this->raw["obj"]);
 			}
-			
+			$this->data["type"] = $this->raw["type"];
+			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
+			$this->data["msg"] = $this->getFormat( $this->data["type"] );
 			return true;
 		}
+	}
+	
+	private function getFormat( $mixed ) {
+		if( !file_exists($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") ) {
+			return false;
+		}
+		foreach( file($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") as $line ) {
+			if( strstr("// Format: ") || strstr(" * Format: ") || strstr("/* Format: ") ) {
+				$format .= str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line)
+			}
+		}
+		return $format;
+	}
+	
+	private function callType( $mixed ) {
+		if( !file_exists($config['install_dir']."/alerts/".$this->raw["type"]."inc.php") ) {
+			return false;
+		}
+		eval("$tmp = function( $state ){ ".file_get_contents($config['install_dir']."/alerts/".$this->raw["type"]."inc.php")." }");
+		$tmp = $tmp($this->raw["state"]);
+		return $tmp;
 	}
 	
 	private function getDevice( $mixed ) {
@@ -118,7 +141,7 @@ class Alert implements arrayaccess {
 	
 	public function offsetSet( $offset, $value ) {
 		if( !$this->offsetExists( $offset ) ) {
-			$this->raw[$offset] = $value;
+			$this->raw[$offset] = strtolower($value);
 			return true;
 		} else {
 			return false;
