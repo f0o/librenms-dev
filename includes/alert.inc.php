@@ -58,10 +58,13 @@ class Alert implements arrayaccess {
 						return false;
 					}
 				} elseif( $this->raw["obj"][0] == "d" ) {
-					$this->raw["obj"] = substr($this->raw["obj"],1);
-				}
-				if( !$this->getDevice($this->raw["obj"]) ) {
-					return false;
+					if( !$this->getDevice(substr($this->raw["obj"],1)) ) {
+						return false;
+					}
+				} else {
+					if( !$this->getDevice($this->raw["obj"]) ) {
+						return false;
+					}
 				}
 			}
 			if( !$this->data["type"] ) {
