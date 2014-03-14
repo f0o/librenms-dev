@@ -25,9 +25,13 @@ class Alert implements arrayaccess {
 	}
 	
 	public function resolve( ) {
-		if( $this->raw["obj"] === NULL || $this->raw["type"] === NULL || $this->raw["state"] === NULL ) {
+		global $config;
+		if( !$this->raw["obj"] || !$this->raw["type"] || $this->raw["state"] === NULL ) {
 			return false;
 		} else {
+			if( !$config['alert'][$this->raw["type"]] && !$config['alert']['*']) {
+				return false;
+			}
 			if( is_array($this->raw["obj"]) ) {
 				if( @$this->raw["obj"]["d"] !== NULL ) {
 					$this->getDevice($this->raw["obj"]["d"]);
