@@ -20,8 +20,14 @@ class Alert implements arrayaccess {
 							"state"  => NULL,  //New state
 						);
 	private $data = array( );
-	public function __construct( ) {
+	public function __construct( $raw ) {
 		$this->data["timestamp"] = time();
+		if( is_array($raw) ) {
+			$this->raw['obj']   =   $raw['obj'];
+			$this->raw['type']  =  $raw['type'];
+			$this->raw['state'] = $raw['state'];
+			$this->raw['extra'] = $raw['extra'];
+		}
 	}
 	
 	public function resolve( ) {
@@ -34,31 +40,50 @@ class Alert implements arrayaccess {
 			}
 			if( is_array($this->raw["obj"]) ) {
 				if( @$this->raw["obj"]["d"] !== NULL ) {
-					$this->getDevice($this->raw["obj"]["d"]);
+					if( !$this->getDevice($this->raw["obj"]["d"]) ) {
+						return false;
+					}
 				}
 				if( @$this->raw["obj"]["p"] !== NULL ) {
-					$this->getPort($this->raw["obj"]["p"]);
+					if( !$this->getPort($this->raw["obj"]["p"]) ) {
+						return false;
+					}
 				}
 				if( @$this->raw["obj"]["s"] !== NULL ) {
 					return false;
 				}
 			} else {
-				$this->getDevice($this->raw["obj"]);
+				if( $this->raw["obj"][0] == "p" ) {
+					if( !$this->getPort(substr($this->raw["obj"],1)) ) {
+						return false;
+					}
+				} elseif( $this->raw["obj"][0] == "d" ) {
+					$this->raw["obj"] = substr($this->raw["obj"],1);
+				}
+				if( !$this->getDevice($this->raw["obj"]) ) {
+					return false;
+				}
 			}
 			if( !$this->data["type"] ) {
 				$this->data["type"] = $this->raw["type"];
 			}
 			if( !$this->format ) {
-				$this->parse( $this->data["type"] );
+				if( !$this->parse( $this->data["type"] ) ) {
+					return false;
+				}
 			}
 			if( !$this->data[$this->data["type"]] ) {
 				$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
 			}
 			if( !$this->data['msg'] ) {
-				$this->getFormat( $this->data["type"] );
+				if( !$this->getFormat( $this->data["type"] ) ) {
+					return false;
+				}
 			}
 			if( !$this->data['recv'] ) {
-				$this->getContacts( );
+				if( !$this->getContacts( ) ) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -88,8 +113,19 @@ class Alert implements arrayaccess {
 				}
 			}
 		}
-		$this->format = trim($format);
-		$this->subject = trim($subject);
+		$format = trim($format);
+		$subject = trim($subject);
+		if( strlen($format) > 0 ) {
+			$this->format = $format;
+		} else {
+			return false;
+		}
+		if( strlen($subject) > 0 ) {
+			$this->subject = $subject;
+		} else {
+			return false;
+		}
+		return true;
 	}
 	
 	private function getContacts( ) {
@@ -133,7 +169,11 @@ class Alert implements arrayaccess {
 			}
 		}
 		$this->data["recv"] = $contacts;
-		return $this->data["recv"];
+		if( sizeof($contacts) > 0 ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private function getFormat( $mixed ) {
