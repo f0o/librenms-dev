@@ -45,6 +45,7 @@ class Alert implements arrayaccess {
 			$this->parse( $this->data["type"] );
 			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
 			$this->getFormat( $this->data["type"] );
+			$this->getContacts( );
 			return true;
 		}
 	}
@@ -77,7 +78,7 @@ class Alert implements arrayaccess {
 		$this->subject = trim($subject);
 	}
 	
-	private function getContacts( $mixed ) {
+	private function getContacts( ) {
 		global $config;
 		if( !$this->format ) {
 			return false;
