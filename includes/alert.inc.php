@@ -102,14 +102,14 @@ class Alert implements arrayaccess {
 		$tmpa = array();
 		$tmp  = NULL;
 		if( is_numeric($this->data["port"]["port_id"]) ) {
-			$tmpa = dbFetchRows("SELECT user_id FROM ports_perms WHERE access_level >= 0 AND port_id = ?", array($this->data["port"]["port_id"]));
+			$tmpa = dbFetchRows("SELECT user_id FROM ports_perms WHERE access_level >= 0 AND port_id = ".$this->data["port"]["port_id"]);
 			foreach( $tmpa as $tmp ) {
 				$uids[$tmp['user_id']] = $tmp['user_id'];
 			}
 		}
 		if( is_numeric($this->data["device"]["device_id"]) ) {
 			$contacts[] = "NOC <".$this->data["device"]["sysContact"].">";
-			$tmpa = dbFetchRows("SELECT user_id FROM devices_perms WHERE access_level >= 0 AND device_id = ?", array($this->data["device"]["device_id"]));
+			$tmpa = dbFetchRows("SELECT user_id FROM devices_perms WHERE access_level >= 0 AND device_id = ".$this->data["device"]["device_id"]);
 			foreach( $tmpa as $tmp ) {
 				$uids[$tmp['user_id']] = $tmp['user_id'];
 			}
@@ -128,7 +128,7 @@ class Alert implements arrayaccess {
 		}
 		var_dump($uids);
 		foreach( $uids as $uid ) {
-			$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ?", array( $uid ));
+			$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ".$uid);
 			$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
 		}
 		$this->data["recv"] = $contacts;
