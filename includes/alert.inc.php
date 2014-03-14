@@ -29,13 +29,13 @@ class Alert implements arrayaccess {
 			return false;
 		} else {
 			if( is_array($this->raw["obj"]) ) {
-				if( $this->raw["obj"]["d"] !== NULL ) {
+				if( @$this->raw["obj"]["d"] !== NULL ) {
 					$this->getDevice($this->raw["obj"]["d"]);
 				}
-				if( $this->raw["obj"]["p"] !== NULL ) {
+				if( @$this->raw["obj"]["p"] !== NULL ) {
 					$this->getPort($this->raw["obj"]["p"]);
 				}
-				if( $this->raw["obj"]["s"] !== NULL ) {
+				if( @$this->raw["obj"]["s"] !== NULL ) {
 					return false;
 				}
 			} else {
