@@ -60,7 +60,7 @@ class Alert implements arrayaccess {
 						$format = "";
 						$f = true;
 				}
-				if( !$f || $format == "" ) {
+				if( !$f || sizeof($match) == 3 ) {
 					$format .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/','',$line))." ";
 				}
 			} elseif( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
@@ -68,8 +68,8 @@ class Alert implements arrayaccess {
 					$subject = "";
 					$s = true;
 				}
-				if( !$s || $format == "" ) {
-					$format .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/','',$line))." ";
+				if( !$s || sizeof($match) == 3 ) {
+					$subject .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/','',$line))." ";
 				}
 			}
 		}
