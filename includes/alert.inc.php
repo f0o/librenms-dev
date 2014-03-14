@@ -83,6 +83,9 @@ class Alert implements arrayaccess {
 		if( !$this->format ) {
 			return false;
 		}
+		$contacts = array();
+		$uids = array();
+		$tmp = array();
 		if( is_numeric($this->data["port"]["port_id"]) ) {
 			$tmp = dbFetchRows("SELECT user_id FROM port_perms WHERE access_level >= 5 AND port_id = ?", array($this->data["port"]["port_id"]));
 			$uids = array_merge($uid, $tmp);
@@ -90,17 +93,18 @@ class Alert implements arrayaccess {
 		if( is_numeric($this->data["device"]["device_id"]) ) {
 			$tmp = dbFetchRows("SELECT user_id FROM device_perms WHERE access_level >= 5 AND device_id = ?", array($this->data["device"]["device_id"]));
 			$uids = array_merge($uid, $tmp);
+			$contacts[] = $this->data["device"]["sysContact"];
 		}
 		if( $config["alert"]["globals"] ) {
-			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE access_level >= 5 AND access_level < 10");
+			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE level >= 5 AND level < 10");
 			foreach( $tmp as $glob ) {
 				$contacts[] = $glob['realname'].' <'.$glob['email'].'>';
 			}
 		}
 		if( $config["alert"]["admins"] ) {
-			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE access_level = 10");
-			foreach( $tmp as $glob ) {
-				$contacts[] = $glob['realname'].' <'.$glob['email'].'>';
+			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE level = 10");
+			foreach( $tmp as $adm ) {
+				$contacts[] = $adm['realname'].' <'.$adm['email'].'>';
 			}
 		}
 		foreach( $uids as $uid ) {
