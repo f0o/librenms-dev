@@ -61,9 +61,9 @@ class Alert implements arrayaccess {
 						$format = "";
 						$s = true;
 					}
-					$format .= trim(str_replace(array("// Format-".$this->raw['state'].": "," * Format-".$this->raw['state'].": ","/* Format-".$this->raw['state'].": "),array("","",""),$line));
+					$format .= trim(str_replace(array("// Format-".$this->raw['state'].": "," * Format-".$this->raw['state'].": ","/* Format-".$this->raw['state'].": "),array("","",""),$line))." ";
 				} elseif( !$s ) {
-					$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line));
+					$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line))." ";
 				}
 			}
 		}

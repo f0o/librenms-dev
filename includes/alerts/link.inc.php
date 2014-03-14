@@ -3,7 +3,7 @@
  * Require: device, port
  *
  * Subject: Port state change of {$alert['port']['ifDescr']} on {$alert['device']['hostname']}
- * Format: {$alert['device']['hostname']}/{$alert['port']['ifDesc']} went
+ * Format: {$alert['device']['hostname']}/{$alert['port']['ifDescr']} went
  * Format: from {$alert['link']['old']} to {$alert['link']['state']}
  *
  * Subject-threshold: Port saturation threshold reached on {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
