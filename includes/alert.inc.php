@@ -106,8 +106,8 @@ class Alert implements arrayaccess {
 			$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ?", array( $uid ));
 			$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
 		}
-		$this->data["emails"] = $contacts;
-		return $this->data["emails"];
+		$this->data["recv"] = $contacts;
+		return $this->data["recv"];
 	}
 	
 	private function getFormat( $mixed ) {
