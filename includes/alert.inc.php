@@ -99,20 +99,25 @@ class Alert implements arrayaccess {
 		}
 		$contacts = array();
 		$uids = array();
-		$tmp = array();
+		$tmpa = array();
+		$tmp  = NULL;
 		if( is_numeric($this->data["port"]["port_id"]) ) {
-			$tmp = dbFetchRows("SELECT user_id FROM ports_perms WHERE access_level >= 0 AND port_id = ?", array($this->data["port"]["port_id"]));
-			$uids = array_merge($uid, $tmp);
+			$tmpa = dbFetchRows("SELECT user_id FROM ports_perms WHERE access_level >= 0 AND port_id = ?", array($this->data["port"]["port_id"]));
+			foreach( $tmpa as $tmp ) {
+				$uids[$tmp['user_id']] = $tmp['user_id'];
+			}
 		}
 		if( is_numeric($this->data["device"]["device_id"]) ) {
-			$tmp = dbFetchRows("SELECT user_id FROM devices_perms WHERE access_level >= 0 AND device_id = ?", array($this->data["device"]["device_id"]));
-			$uids = array_merge($uid, $tmp);
 			$contacts[] = "NOC <".$this->data["device"]["sysContact"].">";
+			$tmpa = dbFetchRows("SELECT user_id FROM devices_perms WHERE access_level >= 0 AND device_id = ?", array($this->data["device"]["device_id"]));
+			foreach( $tmpa as $tmp ) {
+				$uids[$tmp['user_id']] = $tmp['user_id'];
+			}
 		}
 		if( $config["alert"]["globals"] ) {
-			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE level >= 5 AND level < 10");
-			foreach( $tmp as $glob ) {
-				$contacts[] = $glob['realname'].' <'.$glob['email'].'>';
+			$tmpa = dbFetchRows("SELECT realname,email FROM users WHERE level >= 5 AND level < 10");
+			foreach( $tmpa as $tmp ) {
+				$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
 			}
 		}
 		if( $config["alert"]["admins"] ) {
