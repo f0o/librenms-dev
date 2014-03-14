@@ -15,9 +15,10 @@
 
 class Alert implements arrayaccess {
 	private $raw = array(
-							"obj"    => NULL,  //Can be Int, String or Array( Prop=>Val )
-							"type"   => NULL,  //Can be Int or String
-							"state"  => NULL,  //New state
+							"obj"    => NULL,  //Can be Int, String like 'd123 or p123 or s123' or Array( [d|p|s]=>123 )
+							"type"   => NULL,  //Can be Int or String, see alert-handler's documenation.
+							"state"  => NULL,  //Property to handle alert for.
+							"extra"  => NULL,  //Extra information for those handlers that require more input.
 						);
 	private $data = array( );
 	public function __construct( $raw ) {
@@ -70,7 +71,7 @@ class Alert implements arrayaccess {
 			if( !$this->data["type"] ) {
 				$this->data["type"] = $this->raw["type"];
 			}
-			if( !$this->format ) {
+			if( !$this->parse ) {
 				if( !$this->parse( $this->data["type"] ) ) {
 					return false;
 				}
@@ -97,8 +98,20 @@ class Alert implements arrayaccess {
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
+		$parse = array( "Format"=>"", "Subject"=>"", "HTMLFormat"=>"", "Require"=>"" );
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
-			if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
+			foreach( $parse $k => $v ) {
+				if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
+					if( sizeof($match) == 3 && !$f ) {
+						$parse[$k] = "";
+						$tmp[$k] = true;
+					}
+					if( !$tmp[$k] || sizeof($match) == 3 ) {
+						$parse[$k] .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/','',$line))." ";
+					}
+				}
+			}
+/*			if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
 				if( sizeof($match) == 3 && !$f ) {
 						$format = "";
 						$f = true;
@@ -114,26 +127,20 @@ class Alert implements arrayaccess {
 				if( !$s || sizeof($match) == 3 ) {
 					$subject .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/','',$line))." ";
 				}
+			}*/
+		}
+		foreach( $parse as $v ) {
+			if( strlen($v) == 0 ) {
+				return false;
 			}
 		}
-		$format = trim($format);
-		$subject = trim($subject);
-		if( strlen($format) > 0 ) {
-			$this->format = $format;
-		} else {
-			return false;
-		}
-		if( strlen($subject) > 0 ) {
-			$this->subject = $subject;
-		} else {
-			return false;
-		}
+		$this->parse = $parse;
 		return true;
 	}
 	
 	private function getContacts( ) {
 		global $config;
-		if( !$this->format ) {
+		if( !$this->parse ) {
 			return false;
 		}
 		$contacts = array();
@@ -181,14 +188,14 @@ class Alert implements arrayaccess {
 	
 	private function getFormat( $mixed ) {
 		global $config;
-		if( !$this->format ) {
+		if( !$this->parse ) {
 			return false;
 		}
 		$alert = $this->data;
-		eval('$tmp = "'.$this->format.'";');
+		eval('$tmp = "'.$this->parse['Format'].'";');
 		$this->data['msg'] = $tmp;
 		unset($tmp);
-		eval('$tmp = "'.$this->subject.'";');
+		eval('$tmp = "'.$this->parse['Subject].'";');
 		$this->data['subj'] = $tmp;
 		unset($tmp);
 		return true;
@@ -196,7 +203,7 @@ class Alert implements arrayaccess {
 	
 	private function callType( $mixed ) {
 		global $config;
-		if( !$this->format ) {
+		if( !$this->parse ) {
 			return false;
 		}
 		eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
