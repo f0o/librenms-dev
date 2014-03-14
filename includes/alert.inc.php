@@ -45,7 +45,6 @@ class Alert implements arrayaccess {
 			$this->parse( $this->data["type"] );
 			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
 			$this->getFormat( $this->data["type"] );
-			$this->getContacts( );
 			return true;
 		}
 	}
@@ -93,7 +92,7 @@ class Alert implements arrayaccess {
 		if( is_numeric($this->data["device"]["device_id"]) ) {
 			$tmp = dbFetchRows("SELECT user_id FROM device_perms WHERE access_level >= 5 AND device_id = ?", array($this->data["device"]["device_id"]));
 			$uids = array_merge($uid, $tmp);
-			$contacts[] = $this->data["device"]["sysContact"];
+			$contacts[] = "NOC <".$this->data["device"]["sysContact"].">";
 		}
 		if( $config["alert"]["globals"] ) {
 			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE level >= 5 AND level < 10");
@@ -164,6 +163,7 @@ class Alert implements arrayaccess {
 	
 	public function mail( ) {
 		if( $this->resolve() ) {
+			$this->getContacts();
 			return array( 'emails' => $this->data['recv'], 'subject' => $this->data['subj'], 'body' => $this->data['msg'] );
 		} else {
 			return false;
