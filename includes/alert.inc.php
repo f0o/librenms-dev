@@ -50,6 +50,7 @@ class Alert implements arrayaccess {
 	}
 	
 	private function parse( $mixed ) {
+		global $config;
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
