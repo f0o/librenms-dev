@@ -42,39 +42,53 @@ class Alert implements arrayaccess {
 				$this->getDevice($this->raw["obj"]);
 			}
 			$this->data["type"] = $this->raw["type"];
+			$this->parse( $this->data["type"] );
 			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
 			$this->data["msg"] = $this->getFormat( $this->data["type"] );
 			return true;
 		}
 	}
 	
-	private function getFormat( $mixed ) {
-		global $config;
+	private function parse( $mixed ) {
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
-		$s = false;
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
-				if( sizeof($match) == 3 ) {
-					if( !$s ) {
+				if( sizeof($match) == 3 && !$f ) {
 						$format = "";
-						$s = true;
-					}
-					$format .= trim(str_replace(array("// Format-".$this->raw['state'].": "," * Format-".$this->raw['state'].": ","/* Format-".$this->raw['state'].": "),array("","",""),$line))." ";
-				} elseif( !$s ) {
-					$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line))." ";
+						$f = true;
+				}
+				if( !$f || $format == "" ) {
+					$format .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/','',$line))." ";
+				}
+			} elseif( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
+				if( sizeof($match) == 3 && !$s ) {
+					$subject = "";
+					$s = true;
+				}
+				if( !$s || $format == "" ) {
+					$format .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/','',$line))." ";
 				}
 			}
 		}
+		$this->format = $format;
+		$this->subject = $subject;
+	}
+	
+	private function getFormat( $mixed ) {
+		global $config;
+		if( !$this->format ) {
+			return false;
+		}
 		$alert = $this->data;
-		eval('$msg = "'.$format.'";');
+		eval('$msg = "'.$this->format.'";');
 		return $msg;
 	}
 	
 	private function callType( $mixed ) {
 		global $config;
-		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
+		if( !$this->format ) {
 			return false;
 		}
 		eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
