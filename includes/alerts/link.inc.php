@@ -8,7 +8,7 @@
  *
  * Subject-threshold: Port saturation threshold reached on {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
  * Format-threshold: Port saturation threshold alarm: {$alert['device']['hostname']} on {$alert['port']['ifDescr']}\n
- * Format-threshold: Rates   : {$alert['threshold']['ifInBits_rate']}/{$alert['threshold']['ifOutBits_rate']}\n
+ * Format-threshold: Rates   : {$alert['link']['ifInBits_rate']}/{$alert['link']['ifOutBits_rate']}\n
  * Format-threshold: ifSpeed : {$alert['port']['ifSpeed']}
  */
 

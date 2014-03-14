@@ -97,7 +97,7 @@ class Alert implements arrayaccess {
 			return false;
 		} else {
 			$w = is_numeric($mixed) ? "port_id" : "ifName";
-			$this->data["port"] = dbFetchRow("SELECT port_id,device_id,ifName,ifPhysAddress,ifSpeed FROM ports WHERE $w = ?", array($mixed));
+			$this->data["port"] = dbFetchRow("SELECT port_id,device_id,ifName,ifDescr,ifPhysAddress,ifSpeed FROM ports WHERE $w = ?", array($mixed));
 			$this->data["device"] = $this->getDevice($this->data["port"]["device_id"]);
 			unset($this->data["port"]["device_id"]);
 			return $this->data["port"];
