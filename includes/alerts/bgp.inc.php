@@ -1,4 +1,5 @@
 /*
+ * Require: device
  * Subject: BGP Session {$alert['bgp']['state']}: {$alert['bgp']['peer']['bgpPeerIdentifier']}
  * Subject: (AS {$alert['bgp']['peer']['bgpPeerRemoteAs']} - {$alert['bgp']['peer']['astext']})
  *

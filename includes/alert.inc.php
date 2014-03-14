@@ -98,7 +98,8 @@ class Alert implements arrayaccess {
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
-		$parse = array( "Format"=>"", "Subject"=>"", "HTMLFormat"=>"", "Require"=>"" );
+		$tmp = array();
+		$parse = array( "Format"=>"", "Subject"=>"", /*"HTMLFormat"=>"",*/ "Require"=>"" );
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			foreach( $parse as $k => $v ) {
 				if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
