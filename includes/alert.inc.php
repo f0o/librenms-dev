@@ -53,11 +53,18 @@ class Alert implements arrayaccess {
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
+		$s = false;
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
-			var_dump(preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match));
-			var_dump($match);
-			if( strstr($line,"// Format: ") || strstr($line," * Format: ") || strstr($line,"/* Format: ") ) {
-				$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line));
+			if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
+				if( sizeof($match) == 3 ) {
+					if( !$s ) {
+						$format = "";
+						$s = true;
+					}
+					$format .= trim(str_replace(array("// Format-".$this->raw['state'].": "," * Format-".$this->raw['state'].": ","/* Format-".$this->raw['state'].": "),array("","",""),$line));
+				} elseif( !$s ) {
+					$format .= trim(str_replace(array("// Format: "," * Format: ","/* Format: "),array("","",""),$line));
+				}
 			}
 		}
 		$alert = $this->data;
