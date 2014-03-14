@@ -118,7 +118,7 @@ class Alert implements arrayaccess {
 		}
 	}
 	
-	public function html( ) {
+	public function mail( ) {
 		if( $this->resolve() ) {
 			return array( 'emails' => $this->data['recv'], 'subject' => $this->data['subj'], 'body' => $this->data['msg'] );
 		} else {
