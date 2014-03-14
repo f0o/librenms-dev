@@ -44,7 +44,7 @@ class Alert implements arrayaccess {
 			$this->data["type"] = $this->raw["type"];
 			$this->parse( $this->data["type"] );
 			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
-			$this->data["msg"] = $this->getFormat( $this->data["type"] );
+			$this->getFormat( $this->data["type"] );
 			return true;
 		}
 	}
@@ -83,8 +83,13 @@ class Alert implements arrayaccess {
 			return false;
 		}
 		$alert = $this->data;
-		eval('$msg = "'.$this->format.'";');
-		return $msg;
+		eval('$tmp = "'.$this->format.'";');
+		$this->data['msg'] = $tmp;
+		unset($tmp);
+		eval('$tmp = "'.$this->subject.'";');
+		$this->data['subj'] = $tmp;
+		unset($tmp);
+		return true;
 	}
 	
 	private function callType( $mixed ) {
