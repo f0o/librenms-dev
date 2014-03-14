@@ -126,10 +126,11 @@ class Alert implements arrayaccess {
 				$contacts[] = $adm['realname'].' <'.$adm['email'].'>';
 			}
 		}
-		var_dump($uids);
-		foreach( $uids as $uid ) {
-			$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ".$uid);
-			$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
+		if( is_array($uids) ) {
+			foreach( $uids as $uid ) {
+				$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ".$uid);
+				$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
+			}
 		}
 		$this->data["recv"] = $contacts;
 		return $this->data["recv"];
