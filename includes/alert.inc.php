@@ -41,10 +41,21 @@ class Alert implements arrayaccess {
 			} else {
 				$this->getDevice($this->raw["obj"]);
 			}
-			$this->data["type"] = $this->raw["type"];
-			$this->parse( $this->data["type"] );
-			$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
-			$this->getFormat( $this->data["type"] );
+			if( !$this->data["type"] ) {
+				$this->data["type"] = $this->raw["type"];
+			}
+			if( !$this->format ) {
+				$this->parse( $this->data["type"] );
+			}
+			if( !$this->data[$this->data["type"]] ) {
+				$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
+			}
+			if( !$this->data['msg'] ) {
+				$this->getFormat( $this->data["type"] );
+			}
+			if( !$this->data['recv'] ) {
+				$this->getContacts( );
+			}
 			return true;
 		}
 	}
@@ -163,7 +174,6 @@ class Alert implements arrayaccess {
 	
 	public function mail( ) {
 		if( $this->resolve() ) {
-			$this->getContacts();
 			return array( 'emails' => $this->data['recv'], 'subject' => $this->data['subj'], 'body' => $this->data['msg'] );
 		} else {
 			return false;
