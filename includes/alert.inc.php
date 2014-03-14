@@ -21,7 +21,7 @@ class Alert implements arrayaccess {
 							"extra"  => NULL,  //Extra information for those handlers that require more input.
 						);
 	private $data = array( );
-	public function __construct( $raw ) {
+	public function __construct( $raw=false ) {
 		$this->data["timestamp"] = time();
 		if( is_array($raw) ) {
 			$this->raw['obj']   =   $raw['obj'];
