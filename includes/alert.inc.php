@@ -73,8 +73,41 @@ class Alert implements arrayaccess {
 				}
 			}
 		}
-		$this->format = $format;
-		$this->subject = $subject;
+		$this->format = trim($format);
+		$this->subject = trim($subject);
+	}
+	
+	private function getContacts( $mixed ) {
+		global $config;
+		if( !$this->format ) {
+			return false;
+		}
+		if( is_number($this->data["port"]["port_id"]) ) {
+			$tmp = dbFetchRows("SELECT user_id FROM port_perms WHERE access_level >= 5 AND port_id = ?", array($this->data["port"]["port_id"]));
+			$uids = array_merge($uid, $tmp);
+		}
+		if( is_number($this->data["device"]["device_id"]) ) {
+			$tmp = dbFetchRows("SELECT user_id FROM device_perms WHERE access_level >= 5 AND device_id = ?", array($this->data["device"]["device_id"]));
+			$uids = array_merge($uid, $tmp);
+		}
+		if( $config["alert"]["globals"] ) {
+			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE access_level >= 5 AND access_level < 10");
+			foreach( $tmp as $glob ) {
+				$contacts[] = $glob['realname'].' <'.$glob['email'].'>';
+			}
+		}
+		if( $config["alert"]["admins"] ) {
+			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE access_level = 10");
+			foreach( $tmp as $glob ) {
+				$contacts[] = $glob['realname'].' <'.$glob['email'].'>';
+			}
+		}
+		foreach( $uids as $uid ) {
+			$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ?", array( $uid ));
+			$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
+		}
+		$this->data["emails"] = $contacts;
+		return $this->data["emails"];
 	}
 	
 	private function getFormat( $mixed ) {
