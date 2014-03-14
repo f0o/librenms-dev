@@ -100,7 +100,7 @@ class Alert implements arrayaccess {
 		}
 		$parse = array( "Format"=>"", "Subject"=>"", "HTMLFormat"=>"", "Require"=>"" );
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
-			foreach( $parse $k => $v ) {
+			foreach( $parse as $k => $v ) {
 				if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
 					if( sizeof($match) == 3 && !$f ) {
 						$parse[$k] = "";
