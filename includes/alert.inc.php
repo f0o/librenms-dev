@@ -195,7 +195,7 @@ class Alert implements arrayaccess {
 		eval('$tmp = "'.$this->parse['Format'].'";');
 		$this->data['msg'] = $tmp;
 		unset($tmp);
-		eval('$tmp = "'.$this->parse['Subject].'";');
+		eval('$tmp = "'.$this->parse['Subject'].'";');
 		$this->data['subj'] = $tmp;
 		unset($tmp);
 		return true;
