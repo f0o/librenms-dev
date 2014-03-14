@@ -83,11 +83,11 @@ class Alert implements arrayaccess {
 		if( !$this->format ) {
 			return false;
 		}
-		if( is_number($this->data["port"]["port_id"]) ) {
+		if( is_numeric($this->data["port"]["port_id"]) ) {
 			$tmp = dbFetchRows("SELECT user_id FROM port_perms WHERE access_level >= 5 AND port_id = ?", array($this->data["port"]["port_id"]));
 			$uids = array_merge($uid, $tmp);
 		}
-		if( is_number($this->data["device"]["device_id"]) ) {
+		if( is_numeric($this->data["device"]["device_id"]) ) {
 			$tmp = dbFetchRows("SELECT user_id FROM device_perms WHERE access_level >= 5 AND device_id = ?", array($this->data["device"]["device_id"]));
 			$uids = array_merge($uid, $tmp);
 		}
