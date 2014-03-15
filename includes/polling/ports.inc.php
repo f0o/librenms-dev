@@ -453,11 +453,11 @@ foreach ($ports as $port)
       switch ($this_port['ifOperStatus'])
       {
         case "up":
-          $alert = new Alert( array( 'obj' => 'p'.port['port_id'], 'type' => 'link', 'state' => 'up' ) );
+          $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => 'up' ) );
           $alert->issue();
           break;
         case "down":
-          $alert = new Alert( array( 'obj' => 'p'.port['port_id'], 'type' => 'link', 'state' => 'down' ) );
+          $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => 'down' ) );
           $alert->issue();
           break;
       }
