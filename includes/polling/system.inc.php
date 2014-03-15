@@ -62,8 +62,7 @@
   {
     if ($uptime < $device['uptime'] && $uptime >= $snmpEngineTime)
     {
-      $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'system', 'state' => 'reboot' ) );
-      $alert->issue();
+      $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'system', 'state' => 'reboot', 'issue' => true ) );
       log_event('Device rebooted after '.formatUptime($device['uptime']), $device, 'reboot', $device['uptime']);
     }
 
