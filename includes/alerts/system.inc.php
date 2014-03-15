@@ -3,7 +3,7 @@
  * Require: -
  *
  * Subject-reboot: Device {$alert['device']['hostname']} rebooted
- * Format-reboot: Device {$alert['device']['hostname']} rebooted at {$alert['device']['timestamp']}
+ * Format-reboot: Device {$alert['device']['hostname']} rebooted at {$alert['timestamp']}
  *
  */
 
