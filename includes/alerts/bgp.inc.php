@@ -10,7 +10,7 @@
  */
 if( $state == "flap" || $state == "up" || $state == "down") {
 	$ret["state"] = $state;
-	$ret["peer"] = $extra["peer"];
+	$ret["peer"] = $extra["bgpPeer"];
 	$ret["FsmEstablishedTime"] = $extra["FsmEstablishedTime"];
 } else {
 	return false;
