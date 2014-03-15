@@ -363,7 +363,8 @@ foreach ($ports as $port)
       if (($port['stats']['ifInBits_rate'] >= $saturation_threshold ||  $port['stats']['ifOutBits_rate'] >= $saturation_threshold) && $saturation_threshold > 0)
       {
           log_event('Port reached saturation threshold: ' . formatRates($port['stats']['ifInBits_rate']) . '/' . formatRates($port['stats']['ifOutBits_rate']) . ' - ifspeed: ' . formatRates( $this_port['stats']['ifSpeed'])  , $device, 'interface', $port['port_id']);
-          notify($device, 'Port saturation threshold reached on ' . $device['hostname'] , 'Port saturation threshold alarm: ' . $device['hostname'] . ' on ' . $port['ifDescr'] . "\nRates:" . formatRates($port['stats']['ifInBits_rate']) . '/' . formatRates($port['stats']['ifOutBits_rate']) . ' - ifspeed: ' . formatRates( $this_port['ifSpeed']));
+          $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => 'threshold', 'extra' => array( 'ifInBits_rate' => formatRates($port['stats']['ifInBits_rate']), 'ifOutBits_rate' => formatRates($port['stats']['ifOutBits_rate']) ) ) );
+          $alert->issue();
       }
     }
 
@@ -452,10 +453,12 @@ foreach ($ports as $port)
       switch ($this_port['ifOperStatus'])
       {
         case "up":
-          notify($device, "Interface UP - " . $device['hostname'] . " - " . $full, "Device:    " . $device['hostname'] . "\nInterface: " . $full);
+          $alert = new Alert( array( 'obj' => 'p'.port['port_id'], 'type' => 'link', 'state' => 'up' ) );
+          $alert->issue();
           break;
         case "down":
-          notify($device, "Interface DOWN - " . $device['hostname'] . " - " . $full, "Device:    " . $device['hostname'] . "\nInterface: " . $full);
+          $alert = new Alert( array( 'obj' => 'p'.port['port_id'], 'type' => 'link', 'state' => 'down' ) );
+          $alert->issue();
           break;
       }
     }
