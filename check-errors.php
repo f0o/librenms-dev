@@ -46,7 +46,7 @@ if (is_array($errored))
   $i = 0;
   $msg = "Interfaces with errors : \n\n";
   echo $interface['hostname'].'/'.$interface['ifDescr']."\n";
-  $alert = new Alert( array("obj" => $errored[0], "type"=>"link", "state"=>"error", "extra"=>$errored[1]) );
+  $alert = new Alert( array("obj" => 'p'.$errored[0], "type"=>"link", "state"=>"error", "extra"=>$errored[1]) );
   $alert->issue();
 }
 
