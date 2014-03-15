@@ -10,6 +10,9 @@
  * Format-threshold: Port saturation threshold alarm: {$alert['device']['hostname']} on {$alert['port']['ifDescr']}\n
  * Format-threshold: Rates   : {$alert['link']['ifInBits_rate']}/{$alert['link']['ifOutBits_rate']}\n
  * Format-threshold: ifSpeed : {$alert['port']['ifSpeed']}
+ *
+ * Subject-error: Port errors detected
+ * Format-error: Errors on {$alert['link']['num']} port{$alert['link']['s']}
  */
 
 if( $state == "threshold" ) {
@@ -21,6 +24,11 @@ if( $state == "threshold" ) {
 } elseif( $state == "up" ) {
 	$ret['state'] = "up";
 	$ret['old'] = "down";
+} elseif( $state == "error" ) {
+	if( $extra ) {
+		$ret['s'] = 's';
+	}
+	$ret['num'] = $extra;
 } else {
 	return false;
 }

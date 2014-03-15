@@ -86,18 +86,20 @@ if ($config['enable_bgp'])
         if ($peer['bgpPeerState'] == $bgpPeerState)
         {
         require_once($config['install_dir']."/includes/alert.inc.php");
-        $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap' 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
+        $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
         $alert->issue();
         log_event('BGP Session Flap: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
         else if ($bgpPeerState == "established")
         {
-          notify($device, "BGP Session up: " . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ' - ' . $peer['astext'] . ')', "BGP Session up since " . formatUptime($bgpPeerFsmEstablishedTime) . ".\n\nHostname : " . $device['hostname'] . "\nPeer IP  : " . $peer['bgpPeerIdentifier'] . "\nRemote AS: " . $peer['bgpPeerRemoteAs'] . ' ('.$peer['astext'].')');
+        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'up', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
+        	$alert->issue();
           log_event('BGP Session Up: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
         else if ($peer['bgpPeerState'] == "established")
         {
-          notify($device, "BGP Session down: " . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ' - ' . $peer['astext'] . ')', "BGP Session down since " . formatUptime($bgpPeerFsmEstablishedTime) . ".\n\nHostname : " . $device['hostname'] . "\nPeer IP  : " . $peer['bgpPeerIdentifier'] . "\nRemote AS: " . $peer['bgpPeerRemoteAs'] . ' ('.$peer['astext'].')');
+        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'down', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
+        	$alert->issue();
           log_event('BGP Session Down: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
       }

@@ -51,8 +51,12 @@ if (is_array($errored))
     $msg .= "$int\n";  // Add a line to the report email warning about them
     $i++;
   }
+  var_dump($erroed);
   // Send the alert email
-  notify($device, $config['project_name'] . " detected errors on $i interface" . ($i != 1 ? 's' : ''), $msg);
+//  notify($device, $config['project_name'] . " detected errors on $i interface" . ($i != 1 ? 's' : ''), $msg);
+ // include_once($config['install_dir']."/includes/alert.inc.php");
+//  $alert = new Alert( array("obj" => ) );
+//  $alert->
 }
 
 echo("$errored interfaces with errors over the past 5 minutes.\n");
