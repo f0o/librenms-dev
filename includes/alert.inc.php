@@ -160,7 +160,7 @@ class Alert implements arrayaccess {
 			}
 		}
 		if( is_numeric($this->data["device"]["device_id"]) ) {
-			$contacts[this->data["device"]["sysContact"]] ="NOC";
+			$contacts[$this->data["device"]["sysContact"]] = "NOC";
 			$tmpa = dbFetchRows("SELECT user_id FROM devices_perms WHERE access_level >= 0 AND device_id = ".$this->data["device"]["device_id"]);
 			foreach( $tmpa as $tmp ) {
 				$uids[$tmp['user_id']] = $tmp['user_id'];
