@@ -15,11 +15,11 @@
 
 class Alert implements arrayaccess {
 	private $raw = array(
-							"obj"    => NULL,  //Can be Int, String like 'd123 or p123 or s123' or Array( [d|p|s]=>123 )
-							"type"   => NULL,  //Can be Int or String, see alert-handler's documenation.
-							"state"  => NULL,  //Property to handle alert for.
-							"extra"  => NULL,  //Extra information for those handlers that require more input.
-						);
+		"obj"    => NULL,  //Can be Int, String like 'd123 or p123 or s123' or Array( [d|p|s]=>123 )
+		"type"   => NULL,  //Can be Int or String, see alert-handler's documenation.
+		"state"  => NULL,  //Property to handle alert for.
+		"extra"  => NULL,  //Extra information for those handlers that require more input.
+	);
 	private $data = array( );
 	public function __construct( $raw=false ) {
 		$this->data["timestamp"] = time();
@@ -93,13 +93,36 @@ class Alert implements arrayaccess {
 		}
 	}
 	
+	private function issue( $mixed ) {
+		global $config;
+		if( !$this->parse ) {
+			return false;
+		}
+		foreach( $config['alert']['issue'] as $type => $v ) {
+			if( $v ) {
+				if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
+					return false;
+				}
+				eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
+				$tmp = $tmp($mixed);
+				
+			} else {
+				// this transport disabled
+				continue;
+			}
+		}
+	}
+	
 	private function parse( $mixed ) {
 		global $config;
 		if( !file_exists($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") ) {
 			return false;
 		}
 		$tmp = array();
-		$parse = array( "Format"=>"", "Subject"=>"", /*"HTMLFormat"=>"",*/ "Require"=>"" );
+		$parse = array( "Format"=>"", "Subject"=>"", "Require"=>"" );
+		foreach( $config['alert']['formats'] as $format ) {
+			$parse[$format] = "";
+		}
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			foreach( $parse as $k => $v ) {
 				if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
@@ -112,23 +135,6 @@ class Alert implements arrayaccess {
 					}
 				}
 			}
-/*			if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
-				if( sizeof($match) == 3 && !$f ) {
-						$format = "";
-						$f = true;
-				}
-				if( !$f || sizeof($match) == 3 ) {
-					$format .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Format(-'.$this->raw['state'].')?:\s/','',$line))." ";
-				}
-			} elseif( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
-				if( sizeof($match) == 3 && !$s ) {
-					$subject = "";
-					$s = true;
-				}
-				if( !$s || sizeof($match) == 3 ) {
-					$subject .= trim(preg_replace('/^\s?+(\/\/|\*|\/\*)\s?+Subject(-'.$this->raw['state'].')?:\s/','',$line))." ";
-				}
-			}*/
 		}
 		foreach( $parse as $v ) {
 			if( strlen($v) == 0 ) {
