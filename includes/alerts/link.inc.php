@@ -2,7 +2,7 @@
  * Short-Desc: Alert handler for Link-Typed events
  * Require: device, port
  *
- * Subject: Port state change of {$alert['port']['ifDescr']}/{$alert['device']['hostname']}
+ * Subject: Port state change of {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
  * Format: {$alert['port']['ifDescr']} of {$alert['device']['hostname']} went
  * Format: from {$alert['link']['old']} to {$alert['link']['state']}
  *
