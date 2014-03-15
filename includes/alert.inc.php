@@ -93,7 +93,7 @@ class Alert implements arrayaccess {
 		}
 	}
 	
-	public function issue( $mixed ) {
+	public function issue( $mixed=false ) {
 		global $config;
 		if( !$this->parse ) {
 			return false;
@@ -230,8 +230,7 @@ class Alert implements arrayaccess {
 			return $this->data["device"];
 		}
 	}
-	
-	private function getPort( $mixed ) {
+		private function getPort( $mixed ) {
 		if( $mixed === NULL ) {
 			return false;
 		} else {
