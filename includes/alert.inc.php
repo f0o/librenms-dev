@@ -120,13 +120,15 @@ class Alert implements arrayaccess {
 		}
 		$tmp = array();
 		$parse = array( "Format"=>"", "Subject"=>"", "Require"=>"" );
-		foreach( $config['alert']['formats'] as $format ) {
-			$parse[$format] = "";
+		if( is_array($config['alert']['formats']) ) {
+			foreach( $config['alert']['formats'] as $format ) {
+				$parse[$format] = "";
+			}
 		}
 		foreach( file($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php") as $line ) {
 			foreach( $parse as $k => $v ) {
 				if( preg_match('/^\s?+(\/\/|\*|\/\*)\s?+'.$k.'(-'.$this->raw['state'].')?:\s/',$line,$match) == 1 ) {
-					if( sizeof($match) == 3 && !$f ) {
+					if( sizeof($match) == 3 && !$tmp[$k] ) {
 						$parse[$k] = "";
 						$tmp[$k] = true;
 					}
