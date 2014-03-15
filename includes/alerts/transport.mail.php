@@ -1,0 +1,1 @@
+return send_mail($this->data['emails'], $this->data['subject'], $this->data['body']);
