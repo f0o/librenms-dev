@@ -2,13 +2,15 @@
  * Short-Desc: Alert handler for system-typed events
  * Require: -
  *
- * Subject-reboot: Device {$alert['device']['hostname']} rebooted
- * Format-reboot: Device {$alert['device']['hostname']} rebooted at {$alert['timestamp']}
+ * Subject: Device {$alert['device']['hostname']} {$alert['system']['state']}
+ * Format: Device {$alert['device']['hostname']} {$alert['system']['state']} at {$alert['timestamp']}.
  *
  */
 
 if( $state == "reboot" ) {
-	$ret = true;
+	$ret['state'] = "rebooted";
+} elseif( $state == "up" || $state == "down" ) {
+	$ret['state'] = $state;
 } else {
 	return false;
 }

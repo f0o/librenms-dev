@@ -135,7 +135,7 @@ function poll_device($device, $options)
     dbInsert(array('importance' => '0', 'device_id' => $device['device_id'], 'message' => "Device is " .($status == '1' ? 'up' : 'down')), 'alerts');
 
     log_event('Device status changed to ' . ($status == '1' ? 'Up' : 'Down'), $device, ($status == '1' ? 'up' : 'down'));
-    notify($device, "Device ".($status == '1' ? 'Up' : 'Down').": " . $device['hostname'], "Device ".($status == '1' ? 'up' : 'down').": " . $device['hostname']);
+    $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'system', 'state' => ( $status ? 'up' : 'down' ) ) );
   }
 
   if ($status == "1")
