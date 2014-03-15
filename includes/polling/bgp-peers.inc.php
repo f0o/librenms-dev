@@ -88,8 +88,7 @@ if ($config['enable_bgp'])
         require_once($config['install_dir']."/includes/alert.inc.php");
         $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap' 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
         $alert->issue();
-          notify($device, "BGP Session flapped: " . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ' - ' . $peer['astext'] . ')', "BGP Session flapped " . formatUptime($bgpPeerFsmEstablishedTime) . " ago.\n\nHostname : " . $device['hostname'] . "\nPeer IP  : " . $peer['bgpPeerIdentifier'] . "\nRemote AS: " . $peer['bgpPeerRemoteAs'] . ' ('.$peer['astext'].')');
-          log_event('BGP Session Flap: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
+        log_event('BGP Session Flap: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
         else if ($bgpPeerState == "established")
         {

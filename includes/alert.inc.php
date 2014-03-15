@@ -93,7 +93,7 @@ class Alert implements arrayaccess {
 		}
 	}
 	
-	private function issue( $mixed ) {
+	public function issue( $mixed ) {
 		global $config;
 		if( !$this->parse ) {
 			return false;
@@ -105,12 +105,13 @@ class Alert implements arrayaccess {
 				}
 				eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
 				$tmp = $tmp($mixed);
-				
+				unset($tmp);
 			} else {
 				// this transport disabled
 				continue;
 			}
 		}
+		return true;
 	}
 	
 	private function parse( $mixed ) {
