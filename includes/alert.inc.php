@@ -95,9 +95,11 @@ class Alert implements arrayaccess {
 	
 	public function issue( $mixed=false ) {
 		global $config;
+		var_dump("PRE");
 		if( !$this->resolve() || !$this->parse ) {
 			return false;
 		}
+		var_dump("POST);
 		foreach( $config['alert']['issue'] as $type ) {
 			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
 				return false;
@@ -105,6 +107,7 @@ class Alert implements arrayaccess {
 			var_dump($type);
 			eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
 			$tmp = $tmp($mixed);
+			var_dump($tmp);
 			unset($tmp);
 		}
 		return true;
