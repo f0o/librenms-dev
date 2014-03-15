@@ -169,19 +169,19 @@ class Alert implements arrayaccess {
 		if( $config["alert"]["globals"] ) {
 			$tmpa = dbFetchRows("SELECT realname,email FROM users WHERE level >= 5 AND level < 10");
 			foreach( $tmpa as $tmp ) {
-				$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
+				$contacts[$tmp['email']] = $tmp['realname'];
 			}
 		}
 		if( $config["alert"]["admins"] ) {
-			$tmp = dbFetchRows("SELECT realname,email FROM users WHERE level = 10");
-			foreach( $tmp as $adm ) {
-				$contacts[] = $adm['realname'].' <'.$adm['email'].'>';
+			$tmpa = dbFetchRows("SELECT realname,email FROM users WHERE level = 10");
+			foreach( $tmpa as $tmp ) {
+				$contacts[$tmp['email']] = $tmp['realname'];
 			}
 		}
 		if( is_array($uids) ) {
 			foreach( $uids as $uid ) {
 				$tmp = dbFetchRow("SELECT realname,email FROM users WHERE user_id = ".$uid);
-				$contacts[] = $tmp['realname'].' <'.$tmp['email'].'>';
+				$contacts[$tmp['email']] = $tmp['realname'];
 			}
 		}
 		$this->data["recv"] = $contacts;
