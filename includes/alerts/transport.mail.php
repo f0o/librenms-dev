@@ -1,1 +1,2 @@
-return send_mail($this->data['emails'], $this->data['subject'], $this->data['body']);
+$data = $this->mail();
+return send_mail($data['emails'], $data['subject'], $data['body']);
