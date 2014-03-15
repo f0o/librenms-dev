@@ -99,7 +99,7 @@ class Alert implements arrayaccess {
 		if( !$this->resolve() || !$this->parse ) {
 			return false;
 		}
-		var_dump("POST);
+		var_dump("POST");
 		foreach( $config['alert']['issue'] as $type ) {
 			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
 				return false;
