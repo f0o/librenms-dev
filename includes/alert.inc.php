@@ -95,7 +95,7 @@ class Alert implements arrayaccess {
 	
 	public function issue( $mixed=false ) {
 		global $config;
-		if( !$this->parse ) {
+		if( !$this->resolve() || !$this->parse ) {
 			return false;
 		}
 		foreach( $config['alert']['issue'] as $type ) {
