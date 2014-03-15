@@ -85,7 +85,6 @@ if ($config['enable_bgp'])
       {
         if ($peer['bgpPeerState'] == $bgpPeerState)
         {
-        require_once($config['install_dir']."/includes/alert.inc.php");
         $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ) ) );
         $alert->issue();
         log_event('BGP Session Flap: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);

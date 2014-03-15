@@ -20,6 +20,7 @@ include("config.php");
 include("includes/definitions.inc.php");
 include("includes/functions.php");
 include("includes/polling/functions.inc.php");
+include("includes/alert.inc.php");
 
 $poller_start = utime();
 echo($config['project_name_version']." Poller\n\n");
