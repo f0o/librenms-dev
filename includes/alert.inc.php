@@ -28,6 +28,16 @@ class Alert implements arrayaccess {
 			$this->raw['type']  =  $raw['type'];
 			$this->raw['state'] = $raw['state'];
 			$this->raw['extra'] = $raw['extra'];
+			if( $raw['issue'] ) {
+				return $this->issue();
+			}
+		}
+	}
+	
+	public function __destruct( ) {
+ 	global $config;
+		if( $config['alert']['autoissue'] ) {
+		 return $this->issue();
 		}
 	}
 	
