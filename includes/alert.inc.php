@@ -98,18 +98,14 @@ class Alert implements arrayaccess {
 		if( !$this->parse ) {
 			return false;
 		}
-		foreach( $config['alert']['issue'] as $type => $v ) {
-			if( $v ) {
-				if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
-					return false;
-				}
-				eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
-				$tmp = $tmp($mixed);
-				unset($tmp);
-			} else {
-				// this transport disabled
-				continue;
+		foreach( $config['alert']['issue'] as $type ) {
+			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
+				return false;
 			}
+			var_dump($type);
+			eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
+			$tmp = $tmp($mixed);
+			unset($tmp);
 		}
 		return true;
 	}
