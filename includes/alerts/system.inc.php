@@ -3,7 +3,7 @@
  * Require: -
  *
  * Subject: Device {$alert['device']['hostname']} {$alert['system']['state']}
- * Format: Device {$alert['device']['hostname']} {$alert['system']['state']} at {$alert['timestamp']}.
+ * Format: Device {$alert['device']['hostname']} {$alert['system']['state']} at {formatUptime($alert['timestamp'])}.
  *
  */
 

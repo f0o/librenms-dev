@@ -85,17 +85,17 @@ if ($config['enable_bgp'])
       {
         if ($peer['bgpPeerState'] == $bgpPeerState)
         {
-        $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ), 'issue' => true ) );
+        $alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'flap', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => $bgpPeerFsmEstablishedTime ), 'issue' => true ) );
         log_event('BGP Session Flap: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
         else if ($bgpPeerState == "established")
         {
-        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'up', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ), 'issue' => true ) );
+        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'up', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => $bgpPeerFsmEstablishedTime ), 'issue' => true ) );
           log_event('BGP Session Up: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
         else if ($peer['bgpPeerState'] == "established")
         {
-        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'down', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => formatUptime($bgpPeerFsmEstablishedTime) ), 'issue' => true ) );
+        	$alert = new Alert( array( 'obj' => $device['device_id'], 'type' => 'bgp', 'state' => 'down', 'extra' => array( 'bgpPeer' => $peer, 'FsmEstablishedTime' => $bgpPeerFsmEstablishedTime ), 'issue' => true ) );
           log_event('BGP Session Down: ' . $peer['bgpPeerIdentifier'] . ' (AS' . $peer['bgpPeerRemoteAs'] . ')', $device, 'bgpPeer', $bgpPeer_id);
         }
       }
