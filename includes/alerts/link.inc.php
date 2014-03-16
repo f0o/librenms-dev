@@ -21,12 +21,9 @@
 if( $state == "threshold" ) {
 	$ret['ifInBits_rate'] = $extra['ifInBits_rate'];
 	$ret['ifOutBits_rate'] = $extra['ifOutBits_rate'];
-} elseif( $state == "down" ) {
-	$ret['state'] = "down";
-	$ret['old'] = "up";
-} elseif( $state == "up" ) {
-	$ret['state'] = "up";
-	$ret['old'] = "down";
+} elseif( $state == "up" || $state == "down" ) {
+	$ret['state'] = $state;
+	$ret['old'] = $extra;
 } elseif( $state == "error" ) {
 	$ret['ifInErrors_delta'] = $extra['ifInErrors_delta'];
 	$ret['ifOutErrors_delta'] = $extra['ifOutErrors_delta'];

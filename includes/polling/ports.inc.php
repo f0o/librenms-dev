@@ -449,15 +449,7 @@ foreach ($ports as $port)
       } else {
         $full = $this_port['ifDescr'];
       }
-      switch ($this_port['ifOperStatus'])
-      {
-        case "up":
-          $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => 'up', 'issue' => true ) );
-          break;
-        case "down":
-          $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => 'down', 'issue' => true ) );
-          break;
-      }
+      $alert = new Alert( array( 'obj' => 'p'.$port['port_id'], 'type' => 'link', 'state' => $this_port['ifOperStatus'], 'issue' => true, 'extra' => $port['ifOperStatus'] ) );
     }
   }
   elseif ($port['disabled'] != "1")
