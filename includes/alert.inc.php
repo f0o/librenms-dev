@@ -219,6 +219,7 @@ class Alert implements arrayaccess {
 				eval('$tmp = '.substr($mod,1,strlen($mod)-2).';');
 				$value = str_replace($mod, $tmp, $value);
 			}
+			eval('$value = "'.$value.'";');
 			$this->data[$type] = $value;
 			unset($tmp);
 		}
