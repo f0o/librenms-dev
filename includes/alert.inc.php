@@ -296,7 +296,7 @@ class Alert implements arrayaccess {
 	
 	public function txt( ) {
 		if( $this->resolve() ) {
-			return $this->data["msg"];
+			return $this->data['Format'];
 		} else {
 			return false;
 		}
