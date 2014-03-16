@@ -103,16 +103,45 @@ class Alert implements arrayaccess {
 		}
 	}
 	
+	private function chkissue( $deep=false ) {
+		if( !$deep ) {
+			//$config['alert']['fine']['example.net'] = false
+			if( $config['alert']['fine'][$this->data['device']['hostname']] === false ) {
+				return false;
+			}
+			//$config['alert']['fine']['example.net']['sensors'] = false
+			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']] === false ) {
+				return false;
+			}
+			//$config['alert']['fine']['example.net']['eth0'] = false
+			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']] === false ) {
+				return false;
+			}
+			//$config['alert']['fine']['example.net']['eth0']['bgp'] = false
+			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']] === false ) {
+				return false;
+			}
+		} else {
+			//$config['alert']['fine']['example.net']['sensors']['email'] = false
+		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']][$deep] === false ) {
+		 	return false;
+		 }
+		 //$config['alert']['fine']['example.net']['eth0']['bgp']['email'] = false
+		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']][$deep] === false ) {
+		 	return false;
+		 }
+		}
+		return true;
+	}
+	
 	public function issue( $mixed=false ) {
 		global $config;
-		var_dump("PRE");
-		if( !$this->resolve() || !$this->parse ) {
+		if( !$this->resolve() || !$this->parse || $this->chkissue() ) {
 			return false;
 		}
-		var_dump("POST");
 		foreach( $config['alert']['issue'] as $type ) {
-			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") ) {
-				return false;
+			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->chkissue($type) ) {
+				continue;
 			}
 			var_dump($type);
 			eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
@@ -219,7 +248,6 @@ class Alert implements arrayaccess {
 				eval('$tmp = '.substr($mod,1,strlen($mod)-2).';');
 				$value = str_replace(array($mod,'\n'), array($tmp,"\n"), $value);
 			}
-//			eval('$value = "'.$value.'";');
 			$this->data[$type] = $value;
 			unset($tmp);
 		}
