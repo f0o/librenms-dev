@@ -105,28 +105,28 @@ class Alert implements arrayaccess {
 	
 	private function chkissue( $deep=false ) {
 		if( !$deep ) {
-			//$config['alert']['fine']['example.net'] = false
+			var_dump('$config[\'alert\'][\'fine\'][\'example.net\'] = false');
 			if( $config['alert']['fine'][$this->data['device']['hostname']] === false ) {
 				return false;
 			}
-			//$config['alert']['fine']['example.net']['sensors'] = false
+			var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'sensors\'] = false');
 			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']] === false ) {
 				return false;
 			}
-			//$config['alert']['fine']['example.net']['eth0'] = false
+			var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'eth0\'] = false');
 			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']] === false ) {
 				return false;
 			}
-			//$config['alert']['fine']['example.net']['eth0']['bgp'] = false
+			var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'eth0\'][\'bgp\'] = false');
 			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']] === false ) {
 				return false;
 			}
 		} else {
-			//$config['alert']['fine']['example.net']['sensors']['email'] = false
+			var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'sensors\'][\'email\'] = false');
 		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']][$deep] === false ) {
 		 	return false;
 		 }
-		 //$config['alert']['fine']['example.net']['eth0']['bgp']['email'] = false
+		 var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'eth0\'][\'bgp\'][\'email\'] = false');
 		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']][$deep] === false ) {
 		 	return false;
 		 }
