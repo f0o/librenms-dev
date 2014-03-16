@@ -212,7 +212,7 @@ class Alert implements arrayaccess {
 		}
 		$alert = $this->data;
 		foreach( $this->parse as $type => $value ) {
-			preg_match_all('/\{([a-z]+\()?\$.+\)?\})/U', $value, $matches);
+			preg_match_all('/(\{([a-z]+\()+?\$.+\)+?\})/U', $value, $matches);
 			$matches = $matches[0];
 			foreach( $matches as $mod ) {
 				unset($tmp);
