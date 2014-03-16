@@ -127,7 +127,7 @@ class Alert implements arrayaccess {
 		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']][$deep] === false ) {
 		 	return false;
 		 }
-		 var_dump('$config[\'alert\'][\'fine\'][\'example.net\'][\'eth0\'][\'bgp\'][\'email\'] = false');
+		 var_dump('$config[\'alert\'][\'fine\'][\''.$this->data['device']['hostname'].'\'][\''.$this->data['port']['ifName'].'\'][\''.$this->raw['type'].'\'][\''.$depp.'\'] = false');
 		 if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']][$deep] === false ) {
 		 	return false;
 		 }
