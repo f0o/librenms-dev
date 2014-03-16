@@ -89,7 +89,7 @@ class Alert implements arrayaccess {
 			if( !$this->data[$this->data["type"]] ) {
 				$this->data[$this->data["type"]] = $this->callType( $this->data["type"] );
 			}
-			if( !$this->data['msg'] ) {
+			if( !$this->data['Format'] ) {
 				if( !$this->getFormat( $this->data["type"] ) ) {
 					return false;
 				}
@@ -211,12 +211,11 @@ class Alert implements arrayaccess {
 			return false;
 		}
 		$alert = $this->data;
-		eval('$tmp = "'.$this->parse['Format'].'";');
-		$this->data['msg'] = $tmp;
-		unset($tmp);
-		eval('$tmp = "'.$this->parse['Subject'].'";');
-		$this->data['subj'] = $tmp;
-		unset($tmp);
+		foreach( $this->parse as $type => $value ) {
+			eval('$tmp = "'.$this->parse[$type].'";');
+			$this->data[$type] = $tmp;
+			unset($tmp);
+		}
 		return true;
 	}
 	
@@ -254,7 +253,7 @@ class Alert implements arrayaccess {
 	
 	public function mail( ) {
 		if( $this->resolve() ) {
-			return array( 'emails' => $this->data['recv'], 'subject' => $this->data['subj'], 'body' => $this->data['msg'] );
+			return array( 'emails' => $this->data['recv'], 'subject' => $this->data['Subject'], 'body' => $this->data['Format'] );
 		} else {
 			return false;
 		}

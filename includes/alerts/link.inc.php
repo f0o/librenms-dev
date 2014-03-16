@@ -2,17 +2,17 @@
  * Short-Desc: Alert handler for Link-Typed events
  * Require: device, port
  *
- * Subject: Port state change of {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
- * Format: {$alert['port']['ifDescr']} of {$alert['device']['hostname']} went
+ * Subject: Port state change of {$alert['device']['hostname']}/{$alert['port']['ifName']}
+ * Format: {$alert['port']['ifName']} of {$alert['device']['hostname']} went
  * Format: from {$alert['link']['old']} to {$alert['link']['state']}
  *
- * Subject-threshold: Port saturation threshold reached on {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
- * Format-threshold: Port saturation threshold alarm: {$alert['device']['hostname']} on {$alert['port']['ifDescr']}\n
+ * Subject-threshold: Port saturation threshold reached on {$alert['device']['hostname']}/{$alert['port']['ifName']}
+ * Format-threshold: Port saturation threshold alarm: {$alert['device']['hostname']} on {$alert['port']['ifName']}\n
  * Format-threshold: Rates   : {$alert['link']['ifInBits_rate']}/{$alert['link']['ifOutBits_rate']}\n
  * Format-threshold: ifSpeed : {$alert['port']['ifSpeed']}
  *
- * Subject-error: Port errors detected on {$alert['device']['hostname']}/{$alert['port']['ifDescr']}
- * Format-error: Port       : {$alert['port']['ifDescr']}\n
+ * Subject-error: Port errors detected on {$alert['device']['hostname']}/{$alert['port']['ifName']}
+ * Format-error: Port       : {$alert['port']['ifName']}\n
  * Format-error: ifSpeed    : {$alert['port']['ifSpeed']}\n
  * Format-error: In-Errors  : {$alert['link']['ifInErrors_delta']}\n
  * Format-error: Out-Errors : {$alert['link']['ifOutErrors_delta']}\n
