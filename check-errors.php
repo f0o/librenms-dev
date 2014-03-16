@@ -23,7 +23,7 @@ include("html/includes/functions.inc.php");
 include("includes/alert.inc.php");
 
 $params = NULL;
-if( is_number($argv[1]) ) {
+if( is_numeric($argv[1]) ) {
 	$where = "AND `port_id` = ?";
 	$params = array($argv[1]);
 }
