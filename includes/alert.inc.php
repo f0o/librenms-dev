@@ -212,7 +212,9 @@ class Alert implements arrayaccess {
 		}
 		$alert = $this->data;
 		foreach( $this->parse as $type => $value ) {
-			eval('$tmp = "'.$this->parse[$type].'";');
+			preg_split('/\{([a-z]+\()?\$.+\)?\}/', $value, $matches);
+			var_dump($matches);
+			eval('$tmp = "'.$value.'";');
 			$this->data[$type] = $tmp;
 			unset($tmp);
 		}
