@@ -3,8 +3,10 @@
  * Require: -
  *
  * Subject: Device {$alert['device']['hostname']} {$alert['system']['state']}
- * Format: Device {$alert['device']['hostname']} {$alert['system']['state']} at {formatUptime($alert['timestamp'])}.
+ * Format: Device {$alert['device']['hostname']} {$alert['system']['state']} after {formatUptime($alert['device']['uptime'])}.
  *
+ * Subject-up: Device {$alert['device']['hostname']} {$alert['system']['state']}
+ * Format-up: Device {$alert['device']['hostname']} back up
  */
 
 if( $state == "reboot" ) {
