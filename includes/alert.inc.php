@@ -217,9 +217,9 @@ class Alert implements arrayaccess {
 			foreach( $matches as $mod ) {
 				unset($tmp);
 				eval('$tmp = '.substr($mod,1,strlen($mod)-2).';');
-				$value = str_replace($mod, $tmp, $value);
+				$value = str_replace(array($mod,'\n'), array($tmp,"\n"), $value);
 			}
-			eval('$value = "'.$value.'";');
+//			eval('$value = "'.$value.'";');
 			$this->data[$type] = $value;
 			unset($tmp);
 		}
