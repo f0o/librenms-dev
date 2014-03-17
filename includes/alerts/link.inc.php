@@ -26,11 +26,11 @@ if( $state == "threshold" ) {
 	$ret['ifOutBits_rate'] = $extra['ifOutBits_rate'];
 } elseif( $state == "up" ) {
 	if( empty($extra) ) {
-		$ret['subj'] = 'New Port {$alert[\'port\'][\'ifName\']} on {$alert[\'device\'][\'hostname\']}';
-		$ret['dyn'] = 'New port {$alert[\'port\'][\'ifName\']} on {$alert[\'device\'][\'hostname\']} created';
+		$ret['subj'] = "New Port ".$alert['port']['ifName']." on ".$alert['device']['hostname'];
+		$ret['msg'] = "New port ".$alert['port']['ifName']." on ".$alert['device']['hostname']}." created";
 	} else {
-		$ret['subj'] = 'Port state change of {$alert[\'device\'][\'hostname\']}/{$alert[\'port\'][\'ifName\']}';
-		$ret['dyn'] = '{$alert[\'port\'][\'ifName\']} of {$alert[\'device\'][\'hostname\']} went from {$alert[\'link\'][\'old\']} to {$alert[\'link\'][\'state\']}';
+		$ret['subj'] = "Port state change of ".$alert['device']['hostname']."/".$alert['port']['ifName'];
+		$ret['msg'] = $alert['port']['ifName']." of ".alert['device']['hostname']." went from ".$extra." to ".$state;
 	}
 } elseif( $state == "down" ) {
 	$ret['state'] = $state;
