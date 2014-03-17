@@ -103,8 +103,27 @@ class Alert implements arrayaccess {
 		}
 	}
 	
-	private function chkissue( $deep=false ) {
+	private function check( $subj, $ret=false ) {
 		global $config;
+		$subj = explode(',',$subj);
+		$eval = "";
+		$x = sizeof($subj);
+		$i = 0;
+		foreach( $subj as $chk ) {
+			$i++;
+			$eval .= "['".$chk."']";
+			eval('$tst = $config["alert"]'.$eval.";");
+			if( $tst === false ) {
+				return false;
+		 } elseif( is_array($tst) && $i < $x ) {
+		 	continue;
+			} elseif( $ret === true ) {
+				return $tst;
+			} else {
+				return true;
+			}
+		}
+/*
 		if( $deep === false ) {
 			if( $config['alert']['fine'][$this->data['device']['hostname']] === false ) {
 				return false;
@@ -128,15 +147,16 @@ class Alert implements arrayaccess {
 			}
 			return true;
 		}
+*/
 	}
 	
 	public function issue( $mixed=false ) {
 		global $config;
-		if( !$this->resolve() || !$this->parse || !$this->chkissue() ) {
+		if( !$this->resolve() || !$this->parse || !$this->chkissue('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
 			return false;
 		}
 		foreach( $config['alert']['issue'] as $type ) {
-			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->chkissue($type) ) {
+			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->chkissue('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'].','.$type) ) {
 				continue;
 			}
 			var_dump($type);
@@ -180,6 +200,21 @@ class Alert implements arrayaccess {
 		}
 		$this->parse = $parse;
 		return true;
+	}
+	
+	private function log() {
+	 global $config;
+	 if( $config['alert']['nolog'] === true ) {
+	 	return true;
+	 }
+	 if( is_numeric($config['alert']['importance'][$this->raw['type']][$this->raw['state']]) ) {
+	 	$importance = $config['alert']['importance'][$this->raw['type']][$this->raw['state']];
+	 } elseif( is_numeric($config['alert']['importance'][$this->raw['type']]) ) {
+			$importance = $config['alert']['importance'][$this->raw['type']];
+		} else {
+			$importance = 0;
+		}
+		return dbInsert(array('importance' => $importance, 'device_id' => $this->data['device']['device_id'], 'message' => $this->data['Subject']), 'alerts');
 	}
 	
 	private function getContacts( ) {
