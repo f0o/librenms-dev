@@ -152,11 +152,11 @@ class Alert implements arrayaccess {
 	
 	public function issue( $mixed=false ) {
 		global $config;
-		if( !$this->resolve() || !$this->parse || !$this->chkissue('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
+		if( !$this->resolve() || !$this->parse || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
 			return false;
 		}
 		foreach( $config['alert']['issue'] as $type ) {
-			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->chkissue('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'].','.$type) ) {
+			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'].','.$type) ) {
 				continue;
 			}
 			var_dump($type);
@@ -204,14 +204,11 @@ class Alert implements arrayaccess {
 	
 	private function log() {
 	 global $config;
-	 if( $config['alert']['nolog'] === true ) {
+	 if( $this->check('nolog,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
 	 	return true;
 	 }
-	 if( is_numeric($config['alert']['importance'][$this->raw['type']][$this->raw['state']]) ) {
-	 	$importance = $config['alert']['importance'][$this->raw['type']][$this->raw['state']];
-	 } elseif( is_numeric($config['alert']['importance'][$this->raw['type']]) ) {
-			$importance = $config['alert']['importance'][$this->raw['type']];
-		} else {
+		$importance = $this->check('importance,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'], true);
+		if( !is_numeric($importance) ) {
 			$importance = 0;
 		}
 		return dbInsert(array('importance' => $importance, 'device_id' => $this->data['device']['device_id'], 'message' => $this->data['Subject']), 'alerts');
