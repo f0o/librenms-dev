@@ -267,6 +267,10 @@ class Alert implements arrayaccess {
 			return false;
 		}
 		eval('$tmp = function( $state ){ global $config; $alert = $this->data; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
+		if( $tmp === NULL ) {
+			var_dump("Error with template");
+			return NULL;
+		}
 		$tmp = $tmp($this->raw["state"]);
 		return $tmp;
 	}
