@@ -6,6 +6,8 @@
  * Format: {$alert['port']['ifName']} of {$alert['device']['hostname']} went
  * Format: from {$alert['link']['old']} to {$alert['link']['state']}
  *
+ * Format-up: {$alert['port']['dyn']}
+ *
  * Subject-threshold: Port saturation threshold reached on {$alert['device']['hostname']}/{$alert['port']['ifName']}
  * Format-threshold: Port saturation threshold alarm: {$alert['device']['hostname']} on {$alert['port']['ifName']}\n
  * Format-threshold: Rates   : {$alert['link']['ifInBits_rate']}/{$alert['link']['ifOutBits_rate']}\n
@@ -21,7 +23,13 @@
 if( $state == "threshold" ) {
 	$ret['ifInBits_rate'] = $extra['ifInBits_rate'];
 	$ret['ifOutBits_rate'] = $extra['ifOutBits_rate'];
-} elseif( $state == "up" || $state == "down" ) {
+} elseif( $state == "up" ) {
+	if( empty($extra) ) {
+		$ret['dyn'] = 'New device {$alert['port']['ifName']} on {$alert['device']['hostname']} created';
+	} else {
+		$ret['dyn'] = '{$alert[\'port\'][\'ifName\']} of {$alert[\'device\'][\'hostname\']} went from {$alert[\'link\'][\'old\']} to {$alert[\'link\'][\'state\']}';
+	}
+} elseif( $state == "down" ) {
 	$ret['state'] = $state;
 	$ret['old'] = $extra;
 } elseif( $state == "error" ) {
