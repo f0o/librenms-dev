@@ -27,7 +27,7 @@ if( $state == "threshold" ) {
 } elseif( $state == "up" ) {
 	if( empty($extra) ) {
 		$ret['subj'] = "New Port ".$alert['port']['ifName']." on ".$alert['device']['hostname'];
-		$ret['msg'] = "New port ".$alert['port']['ifName']." on ".$alert['device']['hostname']}." created";
+		$ret['msg'] = "New port ".$alert['port']['ifName']." on ".$alert['device']['hostname']." created";
 	} else {
 		$ret['subj'] = "Port state change of ".$alert['device']['hostname']."/".$alert['port']['ifName'];
 		$ret['msg'] = $alert['port']['ifName']." of ".alert['device']['hostname']." went from ".$extra." to ".$state;
