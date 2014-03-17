@@ -123,31 +123,8 @@ class Alert implements arrayaccess {
 				return true;
 			}
 		}
-/*
-		if( $deep === false ) {
-			if( $config['alert']['fine'][$this->data['device']['hostname']] === false ) {
-				return false;
-			}
-			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']] === false ) {
-				return false;
-			}
-			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']] === false ) {
-				return false;
-			}
-			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']] === false ) {
-				return false;
-			}
-			return true;
-		} else {
-			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->raw['type']][$deep] === false ) {
-				return false;
-			}
-			if( $config['alert']['fine'][$this->data['device']['hostname']][$this->data['port']['ifName']][$this->raw['type']][$deep] === false ) {
-				return false;
-			}
-			return true;
-		}
-*/
+		// If you get here, you broke something. Better default to false ;)
+		return false;
 	}
 	
 	public function issue( $mixed=false ) {
@@ -155,6 +132,7 @@ class Alert implements arrayaccess {
 		if( !$this->resolve() || !$this->parse || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
 			return false;
 		}
+		$this->log();
 		foreach( $config['alert']['issue'] as $type ) {
 			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'].','.$type) ) {
 				continue;
