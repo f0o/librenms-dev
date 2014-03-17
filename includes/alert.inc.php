@@ -188,7 +188,7 @@ class Alert implements arrayaccess {
 		if( !is_numeric($importance) ) {
 			$importance = 0;
 		}
-		return dbInsert(array('importance' => $importance, 'device_id' => $this->data['device']['device_id'], 'message' => $this->data['Subject']), 'alerts');
+		return dbInsert(array('importance' => $importance, 'device_id' => $this->data['device']['device_id'], 'message' => $this->data['Subject'], 'alerted' => 1), 'alerts');
 	}
 	
 	private function getContacts( ) {
