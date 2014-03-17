@@ -105,7 +105,7 @@ class Alert implements arrayaccess {
 	
 	private function check( $subj, $ret=false ) {
 		global $config;
-		$subj = explode(',',$subj);
+		$subj = explode(';',$subj);
 		$tst = $config['alert'];
 		$x = sizeof($subj);
 		$i = 0;
@@ -128,12 +128,12 @@ class Alert implements arrayaccess {
 	
 	public function issue( $mixed=false ) {
 		global $config;
-		if( !$this->resolve() || !$this->parse || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
+		if( !$this->resolve() || !$this->parse || !$this->check('fine;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']) ) {
 			return false;
 		}
 		$this->log();
 		foreach( $config['alert']['issue'] as $type ) {
-			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->check('fine,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'].','.$type) ) {
+			if( !file_exists($config['install_dir']."/includes/alerts/transport.".$type.".php") || !$this->check('fine;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type'].';'.$type) ) {
 				continue;
 			}
 			var_dump($type);
@@ -181,10 +181,12 @@ class Alert implements arrayaccess {
 	
 	private function log() {
 	 global $config;
-	 if( !$this->check('log,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
+	 if( !$this->check('log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']) ) {
+	 	var_dump('NOLOG: log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']);
 	 	return true;
 	 }
-		$importance = $this->check('importance,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'], true);
+	 var_dump('LOG: log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']);
+		$importance = $this->check('importance;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type'], true);
 		if( !is_numeric($importance) ) {
 			$importance = 0;
 		}
