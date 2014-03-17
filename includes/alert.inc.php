@@ -266,7 +266,7 @@ class Alert implements arrayaccess {
 		if( !$this->parse ) {
 			return false;
 		}
-		eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
+		eval('$tmp = function( $state ){ global $config; $alert = $this->data; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/".$this->raw["type"].".inc.php").' };');
 		$tmp = $tmp($this->raw["state"]);
 		return $tmp;
 	}
