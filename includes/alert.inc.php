@@ -35,9 +35,9 @@ class Alert implements arrayaccess {
 	}
 	
 	public function __destruct( ) {
- 	global $config;
+		global $config;
 		if( $config['alert']['autoissue'] ) {
-		 return $this->issue();
+			return $this->issue();
 		}
 	}
 	
@@ -111,15 +111,17 @@ class Alert implements arrayaccess {
 		$i = 0;
 		foreach( $subj as $chk ) {
 			$i++;
-			$tst = $tst[$chk];
-			if( $tst === false ) {
-				return false;
-			} elseif( is_array($tst) && $i < $x ) {
-				continue;
-			} elseif( $ret === true ) {
-				return $tst;
-			} else {
-				return true;
+			if( $chk != "" ) {
+				$tst = $tst[$chk];
+				if( $tst === false ) {
+					return false;
+				} elseif( is_array($tst) && $i < $x ) {
+					continue;
+				} elseif( $ret === true ) {
+					return $tst;
+				} else {
+					return true;
+				}
 			}
 		}
 		// If you get here, you broke something. Better default to false ;)
@@ -182,10 +184,8 @@ class Alert implements arrayaccess {
 	private function log() {
 	 global $config;
 	 if( !$this->check('log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']) ) {
-	 	var_dump('NOLOG: log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']);
 	 	return true;
 	 }
-	 var_dump('LOG: log;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type']);
 		$importance = $this->check('importance;'.$this->data['device']['hostname'].';'.$this->data['port']['ifName'].';'.$this->raw['type'], true);
 		if( !is_numeric($importance) ) {
 			$importance = 0;
