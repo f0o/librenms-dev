@@ -139,7 +139,7 @@ class Alert implements arrayaccess {
 				continue;
 			}
 			var_dump($type);
-			eval('$tmp = function( $state ){ global $config; $extra = $this->raw["extra"]; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
+			eval('$tmp = function( $state ){ global $config; $alert = $this->data; '.file_get_contents($config['install_dir']."/includes/alerts/transport.".$type.".php").' };');
 			$tmp = $tmp($mixed);
 			var_dump($tmp);
 			unset($tmp);
