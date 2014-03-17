@@ -106,17 +106,16 @@ class Alert implements arrayaccess {
 	private function check( $subj, $ret=false ) {
 		global $config;
 		$subj = explode(',',$subj);
-		$eval = "";
+		$tst = $config['alert'];
 		$x = sizeof($subj);
 		$i = 0;
 		foreach( $subj as $chk ) {
 			$i++;
-			$eval .= "['".$chk."']";
-			eval('$tst = $config["alert"]'.$eval.";");
+			$tst = $tst[$chk];
 			if( $tst === false ) {
 				return false;
-		 } elseif( is_array($tst) && $i < $x ) {
-		 	continue;
+			} elseif( is_array($tst) && $i < $x ) {
+				continue;
 			} elseif( $ret === true ) {
 				return $tst;
 			} else {
@@ -182,7 +181,7 @@ class Alert implements arrayaccess {
 	
 	private function log() {
 	 global $config;
-	 if( $this->check('nolog,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
+	 if( !$this->check('log,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type']) ) {
 	 	return true;
 	 }
 		$importance = $this->check('importance,'.$this->data['device']['hostname'].','.$this->data['port']['ifName'].','.$this->raw['type'], true);
